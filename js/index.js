@@ -6,66 +6,72 @@ const confirmPassword = document.getElementById("confirm-password");
 //https://www.the-art-of-web.com/javascript/validate-password
 const passwordRegexPattern = new RegExp(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/);
 
-//TODO: Add JS Doc 
+//TODO: Add JS Doc
 function showError(inputElement, optionalErrMsg) {
-    if (inputElement) {
-        const formControl = inputElement.parentElement;
-        const smallElement = formControl.querySelector('small');
-        formControl.className = 'form-control error';
-        smallElement.innerText = optionalErrMsg || `${inputElement.name} is required` ;
-    }
+  if (inputElement) {
+    const formControl = inputElement.parentElement;
+    const smallElement = formControl.querySelector("small");
+    formControl.className = "form-control error";
+    smallElement.innerText =
+      optionalErrMsg || `${inputElement.name} is required`;
+  }
 }
 //TODO: Add JS Doc
 function showSuccess(inputElement) {
-    if (inputElement) {
-        const formControl = inputElement.parentElement;
-        formControl.className = 'form-control success';
-    }
+  if (inputElement) {
+    const formControl = inputElement.parentElement;
+    formControl.className = "form-control success";
+  }
 }
-//TODO: Add JS Doc
+//TODO: Add JS Doc and add min max error message check
 function validateUserName() {
-    if (userName) {
-        userName.value === '' ?
-        showError(userName) : 
+  if (userName) {
+      const userNameValue = userName.value;
+      if (userNameValue === '') {
+        showError(userName);
+      } else if (userNameValue.length < 7) {
+        showError(userName, 'Username must be between 6 to 14 characters');
+      } else {
         showSuccess(userName);
-    }
+      }
+  }
 }
 //TODO: Add JS Doc
-function invalidOrEmptyInputValue(inputElemet, optionalErrMsg) {
-    if (inputElemet) {
-        inputElemet.value === '' ? 
-        showError(inputElemet) :
-        showError(inputElemet, optionalErrMsg);
-    } 
+function invalidOrEmptyInput(inputElemet, optionalErrMsg) {
+  if (inputElemet) {
+    inputElemet.value === ""
+      ? showError(inputElemet)
+      : showError(inputElemet, optionalErrMsg);
+  }
 }
 //TODO: Add JS Doc
 function validateEmail() {
-    //https://ui.dev/validate-email-address-javascript/
-    if (email) {
-        const emailPatternRegex = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-        emailPatternRegex.test(email.value) ? 
-        showSuccess(email) :
-        invalidOrEmptyInputValue(email);
-    }
+  //https://ui.dev/validate-email-address-javascript/
+  if (email) {
+    const emailPatternRegex = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+    emailPatternRegex.test(email.value)
+      ? showSuccess(email)
+      : invalidOrEmptyInput(email, 'Email is invalid');
+  }
 }
 //TODO: Add JS Doc
 function validatePassword() {
-    if (password) {
-        passwordRegexPattern.test(password.value) ?
-        showSuccess(password) :
-        invalidOrEmptyInputValue(password);
-    }
+  if (password) {
+    passwordRegexPattern.test(password.value)
+      ? showSuccess(password)
+      : invalidOrEmptyInput(password, `Password must be between 8 to 18 characters and include 
+      a capital letter, a small letter, and a number`);
+  }
 }
 //TODO: Add JS Doc
 function validateConfirmPassword() {
-    if (passwordRegexPattern) {
-        passwordRegexPattern.test(confirmPassword.value) &&
-        confirmPassword.value === password.value ?
-        showSuccess(confirmPassword) :
-        invalidOrEmptyInputValue(confirmPassword, 'Password do not match');
-    }
+  if (passwordRegexPattern) {
+    passwordRegexPattern.test(confirmPassword.value) &&
+    confirmPassword.value === password.value
+      ? showSuccess(confirmPassword)
+      : invalidOrEmptyInput(confirmPassword, 'Password do not match');
+  }
 }
-
 
 /**
  * Event propagation - A stack of events fired in a web browser
@@ -78,13 +84,13 @@ function validateConfirmPassword() {
  */
 //TODO: Add JS Doc
 form.addEventListener("submit", function(event) {
-    const fieldValidationFuncList = [
-        validateUserName,
-        validateEmail,
-        validatePassword,
-        validateConfirmPassword
-    ]
-    event.preventDefault();
+  const fieldValidationFuncList = [
+    validateUserName,
+    validateEmail,
+    validatePassword,
+    validateConfirmPassword
+  ];
+  event.preventDefault();
 
-    fieldValidationFuncList.forEach(validationFunction => validationFunction());
+  fieldValidationFuncList.forEach(validationFunction => validationFunction());
 });
